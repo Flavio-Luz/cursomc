@@ -11,7 +11,6 @@ import com.flavioluz.cursomc.domain.ItemPedido;
 import com.flavioluz.cursomc.domain.PagamentoComBoleto;
 import com.flavioluz.cursomc.domain.Pedido;
 import com.flavioluz.cursomc.domain.enums.EstadoPagamento;
-import com.flavioluz.cursomc.repositories.ClienteRepository;
 import com.flavioluz.cursomc.repositories.ItemPedidoRepository;
 import com.flavioluz.cursomc.repositories.PagamentoRepository;
 import com.flavioluz.cursomc.repositories.PedidoRepository;
@@ -37,6 +36,9 @@ public class PedidoService {
 	
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	public Pedido find(Integer id) {
 		Optional<Pedido> obj = repo.findById(id);
@@ -64,7 +66,7 @@ public class PedidoService {
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());
-		System.out.println(obj);
+		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 	}
 }
